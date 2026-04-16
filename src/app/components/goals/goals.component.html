@@ -1,0 +1,88 @@
+<mat-toolbar color="primary" class="toolbar">
+  <mat-icon>track_changes</mat-icon>
+  <span class="toolbar-title">Goal Tracker</span>
+  <span class="spacer"></span>
+  <button mat-flat-button (click)="openCreateDialog()" aria-label="Add new goal">
+    <mat-icon>add</mat-icon> New Goal
+  </button>
+</mat-toolbar>
+
+<div class="container">
+  <!-- Stats row -->
+  <div class="stats-row">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <span class="stat-number">{{ goals().length }}</span>
+        <span class="stat-label">Total</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card pending">
+      <mat-card-content>
+        <span class="stat-number">{{ pendingCount }}</span>
+        <span class="stat-label">Pending</span>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card completed">
+      <mat-card-content>
+        <span class="stat-number">{{ completedCount }}</span>
+        <span class="stat-label">Completed</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Loading spinner -->
+  @if (loading()) {
+    <div class="spinner-wrap">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+  }
+
+  <!-- Empty state -->
+  @if (!loading() && goals().length === 0) {
+    <div class="empty-state">
+      <mat-icon class="empty-icon">emoji_flags</mat-icon>
+      <p>No goals yet. Create your first one!</p>
+      <button mat-flat-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon> Add Goal
+      </button>
+    </div>
+  }
+
+  <!-- Goals list -->
+  @if (!loading() && goals().length > 0) {
+    <div class="goals-list">
+      @for (goal of goals(); track goal.id) {
+        <mat-card class="goal-card" [class.completed-card]="goal.completed">
+          <mat-card-content class="goal-content">
+            <mat-checkbox
+              [checked]="goal.completed"
+              (change)="toggleComplete(goal)"
+              [attr.aria-label]="'Mark ' + goal.title + ' as ' + (goal.completed ? 'incomplete' : 'complete')"
+              color="primary"
+            ></mat-checkbox>
+
+            <div class="goal-info">
+              <span class="goal-title" [class.strikethrough]="goal.completed">{{ goal.title }}</span>
+              @if (goal.description) {
+                <span class="goal-desc">{{ goal.description }}</span>
+              }
+              <span class="goal-date">{{ goal.created_at | date: 'mediumDate' }}</span>
+            </div>
+
+            <div class="goal-actions">
+              <mat-chip [class]="goal.completed ? 'chip-done' : 'chip-pending'">
+                {{ goal.completed ? 'Done' : 'Pending' }}
+              </mat-chip>
+              <button mat-icon-button (click)="openEditDialog(goal)" matTooltip="Edit goal" aria-label="Edit goal">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteGoal(goal)" matTooltip="Delete goal" aria-label="Delete goal">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>
