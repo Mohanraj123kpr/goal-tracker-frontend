@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Goal, GoalCreate, GoalUpdate } from '../models/goal.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class GoalService {
-  private readonly apiUrl = 'http://localhost:8000/goals';
+  private readonly apiUrl = `${environment.apiUrl}/goals`;
 
   constructor(private http: HttpClient) {}
 
