@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
 import { GoalService } from '../../services/goal.service';
+import { AuthService } from '../../services/auth.service';
 import { Goal } from '../../models/goal.model';
 import { GoalDialogComponent } from '../goal-dialog/goal-dialog.component';
 
@@ -31,6 +32,7 @@ export class GoalsComponent implements OnInit {
 
   constructor(
     private goalService: GoalService,
+    public auth: AuthService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {}

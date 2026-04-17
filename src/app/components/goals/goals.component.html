@@ -7,13 +7,18 @@
       </div>
       <div>
         <h1 class="hero-title">Goal Tracker</h1>
-        <p class="hero-sub">Stay focused. Make it happen.</p>
+        <p class="hero-sub">Welcome back, {{ auth.currentUser()?.name }}</p>
       </div>
     </div>
-    <button mat-flat-button class="add-btn" (click)="openCreateDialog()" aria-label="Add new goal">
-      <mat-icon>add</mat-icon>
-      <span class="add-btn-label">New Goal</span>
-    </button>
+    <div class="hero-actions">
+      <button mat-flat-button class="add-btn" (click)="openCreateDialog()" aria-label="Add new goal">
+        <mat-icon>add</mat-icon>
+        <span class="add-btn-label">New Goal</span>
+      </button>
+      <button mat-icon-button class="logout-btn" (click)="auth.logout()" matTooltip="Sign out" aria-label="Sign out">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
   </div>
 </header>
 

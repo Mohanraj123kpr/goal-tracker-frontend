@@ -52,6 +52,17 @@
   color: rgba(255,255,255,0.75);
 }
 
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-btn {
+  color: rgba(255,255,255,0.85) !important;
+  &:hover { color: #fff !important; background: rgba(255,255,255,0.15) !important; }
+}
+
 .add-btn {
   background: #fff !important;
   color: #6c3fc5 !important;
