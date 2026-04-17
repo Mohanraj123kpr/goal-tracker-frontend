@@ -28,6 +28,12 @@
         <span class="stat-label">Completed</span>
       </mat-card-content>
     </mat-card>
+    <mat-card class="stat-card overdue">
+      <mat-card-content>
+        <span class="stat-number">{{ overdueCount }}</span>
+        <span class="stat-label">Overdue</span>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <!-- Loading spinner -->
@@ -66,7 +72,20 @@
               @if (goal.description) {
                 <span class="goal-desc">{{ goal.description }}</span>
               }
-              <span class="goal-date">{{ goal.created_at | date: 'mediumDate' }}</span>
+              @if (goal.due_date) {
+                <span class="goal-due" [class.overdue]="isOverdue(goal)">
+                  <mat-icon class="due-icon">event</mat-icon>
+                  Due: {{ goal.due_date | date: 'mediumDate' }}
+                  @if (isOverdue(goal)) { <span class="overdue-label">Overdue</span> }
+                </span>
+              }
+              @if (goal.plan) {
+                <span class="goal-plan">
+                  <mat-icon class="plan-icon">list_alt</mat-icon>
+                  {{ goal.plan }}
+                </span>
+              }
+              <span class="goal-date">Created {{ goal.created_at | date: 'mediumDate' }}</span>
             </div>
 
             <div class="goal-actions">

@@ -28,6 +28,7 @@
     .stat-label { font-size: 0.8rem; color: #666; margin-top: 4px; }
     &.pending .stat-number { color: #f57c00; }
     &.completed .stat-number { color: #388e3c; }
+    &.overdue .stat-number { color: #d32f2f; }
   }
 }
 
@@ -85,6 +86,25 @@
   }
   .goal-desc { font-size: 0.85rem; color: #666; }
   .goal-date { font-size: 0.75rem; color: #aaa; }
+  .goal-due {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: #f57c00;
+    .due-icon { font-size: 14px; width: 14px; height: 14px; }
+    &.overdue { color: #d32f2f; font-weight: 500; }
+    .overdue-label { background: #ffebee; color: #d32f2f; border-radius: 4px; padding: 1px 6px; font-size: 0.7rem; }
+  }
+  .goal-plan {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: #555;
+    white-space: pre-line;
+    .plan-icon { font-size: 14px; width: 14px; height: 14px; margin-top: 2px; flex-shrink: 0; }
+  }
 }
 
 .goal-actions {

@@ -117,4 +117,14 @@ export class GoalsComponent implements OnInit {
   get pendingCount(): number {
     return this.goals().filter((g) => !g.completed).length;
   }
+
+  get overdueCount(): number {
+    const today = new Date().toISOString().split('T')[0];
+    return this.goals().filter((g) => !g.completed && g.due_date && g.due_date < today).length;
+  }
+
+  isOverdue(goal: Goal): boolean {
+    if (goal.completed || !goal.due_date) return false;
+    return goal.due_date < new Date().toISOString().split('T')[0];
+  }
 }
