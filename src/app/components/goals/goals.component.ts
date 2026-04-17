@@ -1,15 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDividerModule } from '@angular/material/divider';
 import { DatePipe } from '@angular/common';
 import { GoalService } from '../../services/goal.service';
 import { Goal } from '../../models/goal.model';
@@ -19,15 +15,11 @@ import { GoalDialogComponent } from '../goal-dialog/goal-dialog.component';
   selector: 'app-goals',
   standalone: true,
   imports: [
-    MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule,
     MatCheckboxModule,
-    MatChipsModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatDividerModule,
     DatePipe,
   ],
   templateUrl: './goals.component.html',
@@ -62,7 +54,11 @@ export class GoalsComponent implements OnInit {
   }
 
   openCreateDialog(): void {
-    const ref = this.dialog.open(GoalDialogComponent, { data: {} });
+    const ref = this.dialog.open(GoalDialogComponent, {
+      data: {},
+      width: '100%',
+      maxWidth: '480px',
+    });
     ref.afterClosed().subscribe((result) => {
       if (result) {
         this.goalService.createGoal(result).subscribe({
@@ -77,7 +73,11 @@ export class GoalsComponent implements OnInit {
   }
 
   openEditDialog(goal: Goal): void {
-    const ref = this.dialog.open(GoalDialogComponent, { data: { goal } });
+    const ref = this.dialog.open(GoalDialogComponent, {
+      data: { goal },
+      width: '100%',
+      maxWidth: '480px',
+    });
     ref.afterClosed().subscribe((result) => {
       if (result) {
         this.goalService.updateGoal(goal.id, result).subscribe({

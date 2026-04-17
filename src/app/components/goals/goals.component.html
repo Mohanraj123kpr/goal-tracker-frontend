@@ -1,42 +1,62 @@
-<mat-toolbar color="primary" class="toolbar">
-  <mat-icon>track_changes</mat-icon>
-  <span class="toolbar-title">Goal Tracker</span>
-  <span class="spacer"></span>
-  <button mat-flat-button (click)="openCreateDialog()" aria-label="Add new goal">
-    <mat-icon>add</mat-icon> New Goal
-  </button>
-</mat-toolbar>
+<!-- Hero Header -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-brand">
+      <div class="hero-icon-wrap">
+        <mat-icon class="hero-icon">track_changes</mat-icon>
+      </div>
+      <div>
+        <h1 class="hero-title">Goal Tracker</h1>
+        <p class="hero-sub">Stay focused. Make it happen.</p>
+      </div>
+    </div>
+    <button mat-flat-button class="add-btn" (click)="openCreateDialog()" aria-label="Add new goal">
+      <mat-icon>add</mat-icon>
+      <span class="add-btn-label">New Goal</span>
+    </button>
+  </div>
+</header>
 
 <div class="container">
-  <!-- Stats row -->
+
+  <!-- Progress bar -->
+  @if (goals().length > 0) {
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">Overall Progress</span>
+        <span class="progress-pct">{{ completedCount }}/{{ goals().length }} completed</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="(completedCount / goals().length) * 100"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Stats -->
   <div class="stats-row">
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <span class="stat-number">{{ goals().length }}</span>
-        <span class="stat-label">Total</span>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="stat-card pending">
-      <mat-card-content>
-        <span class="stat-number">{{ pendingCount }}</span>
-        <span class="stat-label">Pending</span>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="stat-card completed">
-      <mat-card-content>
-        <span class="stat-number">{{ completedCount }}</span>
-        <span class="stat-label">Completed</span>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="stat-card overdue">
-      <mat-card-content>
-        <span class="stat-number">{{ overdueCount }}</span>
-        <span class="stat-label">Overdue</span>
-      </mat-card-content>
-    </mat-card>
+    <div class="stat-card total">
+      <mat-icon class="stat-icon">format_list_bulleted</mat-icon>
+      <span class="stat-number">{{ goals().length }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-card pending">
+      <mat-icon class="stat-icon">hourglass_empty</mat-icon>
+      <span class="stat-number">{{ pendingCount }}</span>
+      <span class="stat-label">Pending</span>
+    </div>
+    <div class="stat-card completed">
+      <mat-icon class="stat-icon">check_circle</mat-icon>
+      <span class="stat-number">{{ completedCount }}</span>
+      <span class="stat-label">Completed</span>
+    </div>
+    <div class="stat-card overdue">
+      <mat-icon class="stat-icon">warning_amber</mat-icon>
+      <span class="stat-number">{{ overdueCount }}</span>
+      <span class="stat-label">Overdue</span>
+    </div>
   </div>
 
-  <!-- Loading spinner -->
+  <!-- Loading -->
   @if (loading()) {
     <div class="spinner-wrap">
       <mat-spinner diameter="48"></mat-spinner>
@@ -46,10 +66,13 @@
   <!-- Empty state -->
   @if (!loading() && goals().length === 0) {
     <div class="empty-state">
-      <mat-icon class="empty-icon">emoji_flags</mat-icon>
-      <p>No goals yet. Create your first one!</p>
-      <button mat-flat-button color="primary" (click)="openCreateDialog()">
-        <mat-icon>add</mat-icon> Add Goal
+      <div class="empty-illustration">
+        <mat-icon>emoji_flags</mat-icon>
+      </div>
+      <h3>No goals yet</h3>
+      <p>Set your first goal and start making progress today.</p>
+      <button mat-flat-button class="add-btn" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon> Add your first goal
       </button>
     </div>
   }
@@ -58,50 +81,71 @@
   @if (!loading() && goals().length > 0) {
     <div class="goals-list">
       @for (goal of goals(); track goal.id) {
-        <mat-card class="goal-card" [class.completed-card]="goal.completed">
-          <mat-card-content class="goal-content">
-            <mat-checkbox
-              [checked]="goal.completed"
-              (change)="toggleComplete(goal)"
-              [attr.aria-label]="'Mark ' + goal.title + ' as ' + (goal.completed ? 'incomplete' : 'complete')"
-              color="primary"
-            ></mat-checkbox>
+        <div class="goal-card" [class.completed-card]="goal.completed" [class.overdue-card]="isOverdue(goal)">
+
+          <div class="goal-accent"></div>
+
+          <div class="goal-body">
+            <div class="goal-check">
+              <mat-checkbox
+                [checked]="goal.completed"
+                (change)="toggleComplete(goal)"
+                [attr.aria-label]="'Mark ' + goal.title + ' as ' + (goal.completed ? 'incomplete' : 'complete')"
+                color="primary"
+              ></mat-checkbox>
+            </div>
 
             <div class="goal-info">
-              <span class="goal-title" [class.strikethrough]="goal.completed">{{ goal.title }}</span>
+              <div class="goal-top-row">
+                <span class="goal-title" [class.strikethrough]="goal.completed">{{ goal.title }}</span>
+                <span class="status-badge" [class.badge-done]="goal.completed" [class.badge-overdue]="isOverdue(goal)" [class.badge-pending]="!goal.completed && !isOverdue(goal)">
+                  @if (goal.completed) { <mat-icon class="badge-icon">check</mat-icon> Done }
+                  @else if (isOverdue(goal)) { <mat-icon class="badge-icon">warning</mat-icon> Overdue }
+                  @else { <mat-icon class="badge-icon">schedule</mat-icon> Pending }
+                </span>
+              </div>
+
               @if (goal.description) {
-                <span class="goal-desc">{{ goal.description }}</span>
+                <p class="goal-desc">{{ goal.description }}</p>
               }
-              @if (goal.due_date) {
-                <span class="goal-due" [class.overdue]="isOverdue(goal)">
-                  <mat-icon class="due-icon">event</mat-icon>
-                  Due: {{ goal.due_date | date: 'mediumDate' }}
-                  @if (isOverdue(goal)) { <span class="overdue-label">Overdue</span> }
+
+              <div class="goal-meta">
+                @if (goal.due_date) {
+                  <span class="meta-chip" [class.meta-overdue]="isOverdue(goal)">
+                    <mat-icon>event</mat-icon>
+                    {{ goal.due_date | date: 'MMM d, y' }}
+                  </span>
+                }
+                <span class="meta-chip meta-created">
+                  <mat-icon>schedule</mat-icon>
+                  {{ goal.created_at | date: 'MMM d, y' }}
                 </span>
-              }
+              </div>
+
               @if (goal.plan) {
-                <span class="goal-plan">
-                  <mat-icon class="plan-icon">list_alt</mat-icon>
-                  {{ goal.plan }}
-                </span>
+                <div class="goal-plan">
+                  <div class="plan-header">
+                    <mat-icon>list_alt</mat-icon>
+                    <span>Plan</span>
+                  </div>
+                  <p class="plan-text">{{ goal.plan }}</p>
+                </div>
               }
-              <span class="goal-date">Created {{ goal.created_at | date: 'mediumDate' }}</span>
             </div>
 
             <div class="goal-actions">
-              <mat-chip [class]="goal.completed ? 'chip-done' : 'chip-pending'">
-                {{ goal.completed ? 'Done' : 'Pending' }}
-              </mat-chip>
-              <button mat-icon-button (click)="openEditDialog(goal)" matTooltip="Edit goal" aria-label="Edit goal">
+              <button mat-icon-button (click)="openEditDialog(goal)" matTooltip="Edit" aria-label="Edit goal">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteGoal(goal)" matTooltip="Delete goal" aria-label="Delete goal">
-                <mat-icon>delete</mat-icon>
+              <button mat-icon-button class="delete-btn" (click)="deleteGoal(goal)" matTooltip="Delete" aria-label="Delete goal">
+                <mat-icon>delete_outline</mat-icon>
               </button>
             </div>
-          </mat-card-content>
-        </mat-card>
+          </div>
+
+        </div>
       }
     </div>
   }
+
 </div>
