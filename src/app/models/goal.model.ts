@@ -6,6 +6,8 @@ export interface Goal {
   created_at: string;
   due_date: string | null;
   plan: string | null;
+  recurrence: 'none' | 'daily' | 'weekly' | 'monthly';
+  last_reset: string | null;
 }
 
 export interface GoalCreate {
@@ -13,6 +15,7 @@ export interface GoalCreate {
   description?: string;
   due_date?: string | null;
   plan?: string | null;
+  recurrence?: string;
 }
 
 export interface GoalUpdate {
@@ -21,4 +24,5 @@ export interface GoalUpdate {
   completed?: boolean;
   due_date?: string | null;
   plan?: string | null;
+  recurrence?: string;
 }

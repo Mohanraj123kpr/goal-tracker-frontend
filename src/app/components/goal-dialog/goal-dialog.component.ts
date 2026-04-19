@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
 import { Goal } from '../../models/goal.model';
 
 export interface DialogData {
@@ -23,6 +24,7 @@ export interface DialogData {
     MatButtonModule,
     MatIconModule,
     MatDatepickerModule,
+    MatSelectModule,
   ],
   template: `
     <div class="dialog-header">
@@ -64,6 +66,17 @@ export interface DialogData {
           <mat-label>Plan / Steps</mat-label>
           <mat-icon matPrefix>list_alt</mat-icon>
           <textarea matInput formControlName="plan" rows="4" placeholder="Break it down — what steps will you take?"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Recurrence</mat-label>
+          <mat-icon matPrefix>repeat</mat-icon>
+          <mat-select formControlName="recurrence">
+            <mat-option value="none">No recurrence</mat-option>
+            <mat-option value="daily">Daily</mat-option>
+            <mat-option value="weekly">Weekly</mat-option>
+            <mat-option value="monthly">Monthly</mat-option>
+          </mat-select>
         </mat-form-field>
       </form>
     </mat-dialog-content>
@@ -140,6 +153,7 @@ export class GoalDialogComponent {
       description: [data.goal?.description ?? ''],
       due_date: [data.goal?.due_date ? new Date(data.goal.due_date) : null],
       plan: [data.goal?.plan ?? ''],
+      recurrence: [data.goal?.recurrence ?? 'none'],
     });
   }
 

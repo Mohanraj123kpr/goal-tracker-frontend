@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DatePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,6 +31,7 @@ const PAGE_SIZE = 6;
     MatFormFieldModule,
     FormsModule,
     DatePipe,
+    TitleCasePipe,
   ],
   templateUrl: './goals.component.html',
   styleUrl: './goals.component.scss',

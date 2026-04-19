@@ -151,6 +151,12 @@
                     {{ goal.due_date | date: 'MMM d, y' }}
                   </span>
                 }
+                @if (goal.recurrence && goal.recurrence !== 'none') {
+                  <span class="meta-chip meta-recurrence">
+                    <mat-icon>repeat</mat-icon>
+                    {{ goal.recurrence | titlecase }}
+                  </span>
+                }
                 <span class="meta-chip meta-created">
                   <mat-icon>schedule</mat-icon>
                   {{ goal.created_at | date: 'MMM d, y' }}
