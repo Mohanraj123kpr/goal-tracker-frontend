@@ -98,10 +98,23 @@ export interface DialogData {
 
     .dialog-form {
       display: flex; flex-direction: column; gap: 4px;
-      width: min(440px, 90vw);
+      width: 100%;
       padding-top: 12px;
+      box-sizing: border-box;
     }
     .full-width { width: 100%; }
+
+    ::ng-deep .mat-mdc-dialog-content {
+      max-height: 60vh !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 0 24px !important;
+      box-sizing: border-box !important;
+    }
+
+    ::ng-deep .mat-mdc-dialog-container {
+      overflow: hidden !important;
+    }
 
     .dialog-actions { padding: 8px 16px 16px; gap: 8px; }
     .cancel-btn { color: #666; }

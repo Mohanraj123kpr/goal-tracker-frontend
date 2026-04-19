@@ -39,26 +39,44 @@
 
   <!-- Stats -->
   <div class="stats-row">
-    <div class="stat-card total">
+    <div class="stat-card total" (click)="setFilter('all')" [class.stat-active]="activeFilter() === 'all'" role="button" tabindex="0" aria-label="Show all goals">
       <mat-icon class="stat-icon">format_list_bulleted</mat-icon>
       <span class="stat-number">{{ goals().length }}</span>
       <span class="stat-label">Total</span>
     </div>
-    <div class="stat-card pending">
+    <div class="stat-card pending" (click)="setFilter('pending')" [class.stat-active]="activeFilter() === 'pending'" role="button" tabindex="0" aria-label="Show pending goals">
       <mat-icon class="stat-icon">hourglass_empty</mat-icon>
       <span class="stat-number">{{ pendingCount }}</span>
       <span class="stat-label">Pending</span>
     </div>
-    <div class="stat-card completed">
+    <div class="stat-card completed" (click)="setFilter('completed')" [class.stat-active]="activeFilter() === 'completed'" role="button" tabindex="0" aria-label="Show completed goals">
       <mat-icon class="stat-icon">check_circle</mat-icon>
       <span class="stat-number">{{ completedCount }}</span>
       <span class="stat-label">Completed</span>
     </div>
-    <div class="stat-card overdue">
+    <div class="stat-card overdue" (click)="setFilter('overdue')" [class.stat-active]="activeFilter() === 'overdue'" role="button" tabindex="0" aria-label="Show overdue goals">
       <mat-icon class="stat-icon">warning_amber</mat-icon>
       <span class="stat-number">{{ overdueCount }}</span>
       <span class="stat-label">Overdue</span>
     </div>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input
+      class="search-input"
+      type="text"
+      placeholder="Search goals..."
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearch()"
+      aria-label="Search goals"
+    />
+    @if (searchQuery()) {
+      <button class="search-clear" (click)="searchQuery.set(''); onSearch()" aria-label="Clear search">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
   </div>
 
   <!-- Loading -->
@@ -82,10 +100,22 @@
     </div>
   }
 
+  <!-- No results for filter/search -->
+  @if (!loading() && goals().length > 0 && filteredGoals().length === 0) {
+    <div class="empty-state">
+      <div class="empty-illustration">
+        <mat-icon>search_off</mat-icon>
+      </div>
+      <h3>No results</h3>
+      <p>Try a different filter or search term.</p>
+      <button mat-stroked-button (click)="setFilter('all'); searchQuery.set('')">Clear filters</button>
+    </div>
+  }
+
   <!-- Goals list -->
-  @if (!loading() && goals().length > 0) {
+  @if (!loading() && filteredGoals().length > 0) {
     <div class="goals-list">
-      @for (goal of goals(); track goal.id) {
+      @for (goal of pagedGoals(); track goal.id) {
         <div class="goal-card" [class.completed-card]="goal.completed" [class.overdue-card]="isOverdue(goal)">
 
           <div class="goal-accent"></div>
@@ -151,6 +181,31 @@
         </div>
       }
     </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button mat-icon-button [disabled]="currentPage() === 0" (click)="goToPage(currentPage() - 1)" aria-label="Previous page">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <div class="page-numbers">
+          @for (p of pageRange(); track $index) {
+            <button
+              class="page-btn"
+              [class.active]="p === currentPage()"
+              (click)="goToPage(p)"
+              [attr.aria-label]="'Page ' + (p + 1)"
+              [attr.aria-current]="p === currentPage() ? 'page' : null">
+              {{ p + 1 }}
+            </button>
+          }
+        </div>
+        <button mat-icon-button [disabled]="currentPage() === totalPages() - 1" (click)="goToPage(currentPage() + 1)" aria-label="Next page">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        <span class="page-info">{{ currentPage() + 1 }} / {{ totalPages() }}</span>
+      </div>
+    }
   }
 
 </div>

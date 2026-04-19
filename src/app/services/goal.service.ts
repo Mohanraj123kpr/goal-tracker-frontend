@@ -19,7 +19,7 @@ export class GoalService {
   }
 
   updateGoal(id: number, goal: GoalUpdate): Observable<Goal> {
-    return this.http.patch<Goal>(`${this.apiUrl}/${id}`, goal);
+    return this.http.put<Goal>(`${this.apiUrl}/${id}`, goal);
   }
 
   deleteGoal(id: number): Observable<Goal> {

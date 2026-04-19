@@ -132,7 +132,7 @@
 .stats-row {
   display: flex;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 
   @media (max-width: 480px) { gap: 8px; }
 }
@@ -147,9 +147,16 @@
   align-items: center;
   gap: 4px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  transition: transform 0.15s;
+  transition: transform 0.15s, box-shadow 0.15s, outline 0.1s;
+  cursor: pointer;
+  outline: 2px solid transparent;
 
-  &:hover { transform: translateY(-2px); }
+  &:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,63,197,0.12); }
+
+  &.stat-active {
+    outline: 2px solid currentColor;
+    background: #faf5ff;
+  }
 
   .stat-icon {
     font-size: 20px;
@@ -180,6 +187,61 @@
     padding: 12px 4px;
     .stat-number { font-size: 1.3rem; }
     .stat-icon { font-size: 16px; width: 16px; height: 16px; }
+  }
+}
+
+// ── Search bar ────────────────────────────────────────────────
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 14px;
+  padding: 0 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: #9c5de8;
+    box-shadow: 0 2px 16px rgba(108,63,197,0.12);
+  }
+
+  .search-icon {
+    color: #aaa;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 13px 10px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: transparent;
+    color: #333;
+
+    &::placeholder { color: #bbb; }
+  }
+
+  .search-clear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    color: #aaa;
+    border-radius: 50%;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover { background: #f3f0ff; color: #6c3fc5; }
+
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
   }
 }
 
@@ -397,4 +459,44 @@
   .hero-sub { display: none; }
   .hero-title { font-size: 1.2rem; }
   .hero-icon-wrap { width: 38px; height: 38px; }
+}
+
+// ── Pagination ────────────────────────────────────────────────
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 0 32px;
+
+  .page-numbers {
+    display: flex;
+    gap: 4px;
+  }
+
+  .page-btn {
+    min-width: 36px;
+    height: 36px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #555;
+    transition: all 0.2s;
+
+    &:hover { background: #f3eeff; border-color: #9c5de8; color: #6c3fc5; }
+    &.active {
+      background: linear-gradient(135deg, #6c3fc5, #9c5de8);
+      color: #fff;
+      border-color: transparent;
+      font-weight: 600;
+    }
+  }
+
+  .page-info {
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: 4px;
+  }
 }
